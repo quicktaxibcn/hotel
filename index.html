@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0b0b0b" />
+  <title>Reserva Taxi Hotel</title>
+  <style>
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root{
+      --bg:#090909; --panel:rgba(20,20,20,0.96); --panel-2:#171717; --soft:rgba(255,255,255,0.06);
+      --line:rgba(255,213,74,0.14); --gold:#ffd000; --gold-2:#f0b900; --text:#ffffff;
+      --muted:#decf92; --danger:#ff9a9a; --shadow:0 18px 48px rgba(0,0,0,0.36);
+    }
+    html,body{margin:0;padding:0;width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;}
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(255,213,74,0.08), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255,213,74,0.05), transparent 24%),
+        linear-gradient(180deg, #070707 0%, #101010 100%);
+    }
+    .app{min-height:100dvh;width:100%}
+    .screen{min-height:100dvh;display:flex;justify-content:center;align-items:stretch}
+    .device{width:100%;max-width:480px;min-height:100dvh;background:linear-gradient(180deg, rgba(10,10,10,0.98), rgba(16,16,16,0.98));position:relative}
+    .login-wrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:18px}
+    .login-card{width:100%;max-width:390px;background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:22px 18px 18px;box-shadow:var(--shadow)}
+    .login-card::before{content:"";display:block;width:86px;height:5px;border-radius:99px;margin:0 auto 14px;background:linear-gradient(90deg,var(--gold),#fff1a6,var(--gold));opacity:.95}
+    .login-title{margin:0 0 6px;text-align:center;color:var(--gold);font-size:24px;font-weight:800}
+    .login-sub{margin:0 0 16px;text-align:center;color:var(--muted);font-size:13px}
+    .form-shell{min-height:100dvh;display:flex;flex-direction:column}
+    .appbar{position:sticky;top:0;z-index:50;padding:calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;background:rgba(9,9,9,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.04)}
+    .appbar h1{margin:0;text-align:center;color:var(--gold);font-size:20px;line-height:1.2;font-weight:800}
+    .content{padding:12px 14px calc(env(safe-area-inset-bottom, 0px) + 16px);display:flex;flex-direction:column;gap:12px}
+    .section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.16)}
+    .label{display:block;color:var(--muted);font-size:13px;font-weight:800;margin:0 0 6px;letter-spacing:.2px}
+    input, textarea{width:100%;border:none;outline:none;border-radius:14px;background:var(--soft);color:#fff;font-size:16px;padding:13px}
+    input[readonly]{color:#f7e8a0}
+    input:focus, textarea:focus{box-shadow:0 0 0 2px rgba(255,213,74,0.18)}
+    textarea{min-height:92px;resize:none}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .quick-btn,.pbtn{user-select:none;cursor:pointer}
+    .quick-btn{background:var(--panel-2);border:1px solid rgba(255,255,255,0.04);color:#fff;text-align:center;border-radius:14px;padding:13px 8px;font-size:14px;font-weight:700;line-height:1.15;min-height:50px;display:flex;align-items:center;justify-content:center}
+    .quick-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000}
+    .passenger-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .pbtn{background:var(--panel-2);border:1px solid rgba(255,255,255,0.04);color:#fff;text-align:center;border-radius:12px;padding:12px 0;font-size:15px;font-weight:700}
+    .pbtn.active{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000}
+    .actions{display:flex;flex-direction:column;gap:10px}
+    button.primary, button.secondary{width:100%;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:800;cursor:pointer}
+    button.primary{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;box-shadow:0 12px 24px rgba(255,213,74,0.18)}
+    button.secondary{background:#262626;color:#fff}
+    .error{color:var(--danger);text-align:center;font-size:13px;margin-top:10px;display:none;font-weight:700}
+    .hidden{display:none!important}
+    @media (min-width:768px){
+      body{padding:20px}
+      .screen{min-height:calc(100vh - 40px);align-items:center}
+      .device{max-width:1080px;min-height:auto;border:1px solid rgba(255,255,255,0.05);border-radius:28px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.35)}
+      .form-shell{min-height:auto}
+      .content{padding:18px}
+      .desktop-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:start}
+      .quick-grid{grid-template-columns:repeat(3,1fr)}
+      .passenger-grid{grid-template-columns:repeat(8,1fr)}
+      .appbar h1{font-size:26px}
+      .quick-btn{min-height:54px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div id="loginBox" class="screen">
+      <div class="device" style="max-width:480px;">
+        <div class="login-wrap">
+          <div class="login-card">
+            <h1 class="login-title">Acceso</h1>
+            <p class="login-sub">Acceso privado del hotel</p>
+            <label class="label">Usuario</label>
+            <input id="user" placeholder="Usuario">
+            <label class="label" style="margin-top:10px;">Contraseña</label>
+            <input id="pass" type="password" placeholder="Contraseña">
+            <button class="primary" onclick="login()" style="margin-top:14px;">Entrar</button>
+            <p id="error" class="error">Datos incorrectos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="formBox" class="screen hidden">
+      <div class="device">
+        <div class="form-shell">
+          <div class="appbar">
+            <h1 id="hotelTitle"></h1>
+          </div>
+          <div class="content">
+            <div class="section">
+              <label class="label">Recogida</label>
+              <input id="hotelFull" readonly>
+            </div>
+
+            <div class="desktop-grid">
+              <div>
+                <div class="section">
+                  <div class="row2">
+                    <div>
+                      <label class="label">Nombre / Habitación</label>
+                      <input id="nombre" placeholder="Nombre o Habitación">
+                    </div>
+                    <div>
+                      <label class="label">Teléfono</label>
+                      <input id="telefono" placeholder="Teléfono">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <label class="label">Destino</label>
+                  <div class="quick-grid">
+                    <div class="quick-btn" onclick="setQuick('Aeropuerto ✈️',this)">Aeropuerto ✈️</div>
+                    <div class="quick-btn" onclick="setQuick('Ciutat 🏙️',this)">Ciutat 🏙️</div>
+                    <div class="quick-btn" onclick="setQuick('Puerto Crusero 🚢',this)">Puerto Crusero 🚢</div>
+                    <div class="quick-btn" onclick="setQuick('Sants Estació 🚂',this)">Sants Estació 🚂</div>
+                    <div class="quick-btn" onclick="setOtro(this)">Otro</div>
+                  </div>
+                  <input id="destino" readonly placeholder="Destino" style="margin-top:8px;">
+                  <div id="otroBox" class="hidden" style="margin-top:8px;">
+                    <input id="otroDestino" placeholder="Dirección manual">
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div class="section">
+                  <label class="label">Pasajeros</label>
+                  <div class="passenger-grid" id="passGrid"></div>
+                  <div class="row2" style="margin-top:8px;">
+                    <div>
+                      <label class="label">Pasajeros</label>
+                      <input id="pasajeros" type="number" value="1" min="1">
+                    </div>
+                    <div>
+                      <label class="label">Maletas</label>
+                      <input id="maletas" placeholder="Maletas">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section">
+                  <label class="label">Fecha y hora</label>
+                  <input type="datetime-local" id="fecha">
+                  <label class="label" style="margin-top:8px;">Comentarios</label>
+                  <textarea id="comentarios" placeholder="Opcional"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="primary" onclick="shareMsg()">Compartir</button>
+              <button class="secondary" onclick="logout()">Cerrar sesión</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const hotels = {
+      "sls": {password:"sls2025",name:"Hotel SLS",pickup:"Port Forum, Carrer de la Pau, 2, 08930 Barcelona"},
+      "gravina": {password:"gravina12",name:"Grupotel Gravina",pickup:"Carrer de Gravina, 12, Barcelona"},
+      "princess": {password:"princess2026",name:"Hotel Princess Barcelona",pickup:"Av. Diagonal, 1, Barcelona"},
+      "constanza": {password:"constanza99",name:"Hotel NH Collection Barcelona Constanza",pickup:"Carrer de Déu i Mata, 69-99, Les Corts, 08029 Barcelona"},
+      "bakery": {password:"bakery@123",name:"Hotel Praktik Bakery",pickup:"Carrer de Provença, 279, Eixample, 08037 Barcelona"},
+      "vinoteca": {password:"vinoteca@123",name:"Hotel Praktik Vinoteca",pickup:"Carrer de Balmes, 51, Eixample, 08007 Barcelona"},
+      "praktik": {password:"praktik@123",name:"Hotel Praktik Rambla",pickup:"Rambla de Catalunya, 27, Eixample, 08007 Barcelona"}
+    };
+
+    let currentHotel = null;
+
+    function showLogin(){
+      document.getElementById('loginBox').classList.remove('hidden');
+      document.getElementById('formBox').classList.add('hidden');
+    }
+
+    function showForm(){
+      document.getElementById('loginBox').classList.add('hidden');
+      document.getElementById('formBox').classList.remove('hidden');
+    }
+
+    function login(){
+      const u = user.value.toLowerCase().trim();
+      const p = pass.value;
+      if(hotels[u] && hotels[u].password === p){
+        currentHotel = hotels[u];
+        localStorage.setItem("hotel", u);
+        showForm();
+        hotelTitle.innerText = currentHotel.name;
+        hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+        error.style.display = 'none';
+      } else {
+        error.style.display = 'block';
+      }
+    }
+
+    function logout(){
+      localStorage.removeItem("hotel");
+      location.reload();
+    }
+
+    if(localStorage.getItem("hotel")){
+      const u = localStorage.getItem("hotel");
+      currentHotel = hotels[u];
+      if(currentHotel){
+        showForm();
+        hotelTitle.innerText = currentHotel.name;
+        hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+      }
+    }
+
+    function setQuick(val, btn){
+      document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      destino.value = val;
+      otroBox.classList.add('hidden');
+      otroDestino.value = '';
+    }
+
+    function setOtro(btn){
+      document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      destino.value = 'Otro';
+      otroBox.classList.remove('hidden');
+      otroDestino.focus();
+    }
+
+    function getDestino(){
+      if(destino.value === "Otro"){
+        return otroDestino.value.trim();
+      }
+      return destino.value.trim();
+    }
+
+    function setCurrentDateTime(){
+      const n = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      fecha.value = `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}T${pad(n.getHours())}:${pad(n.getMinutes())}`;
+    }
+
+    function resetFormAfterShare(){
+      nombre.value = '';
+      telefono.value = '';
+      destino.value = '';
+      otroDestino.value = '';
+      otroBox.classList.add('hidden');
+      document.querySelectorAll('.quick-btn').forEach(x => x.classList.remove('active'));
+      pasajeros.value = '1';
+      maletas.value = '';
+      comentarios.value = '';
+      document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
+      const first = document.querySelector('.pbtn');
+      if(first) first.classList.add('active');
+      setCurrentDateTime();
+    }
+
+    for(let i=1;i<=8;i++){
+      const b = document.createElement('div');
+      b.innerText = i;
+      b.className = 'pbtn';
+      if(i===1) b.classList.add('active');
+      b.onclick = function(){
+        document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        pasajeros.value = i;
+      };
+      passGrid.appendChild(b);
+    }
+
+    function formatFecha(value){
+      if(!value) return '';
+      const parts = value.split('T');
+      if(parts.length !== 2) return value;
+      const d = parts[0].split('-');
+      return `${d[2]}/${d[1]}/${d[0]} ${parts[1]}`;
+    }
+
+    function getNombreLabel(value){
+      const v = (value || '').trim();
+      if(!v) return null;
+      if(/^[0-9A-Za-z\-\/]+$/.test(v) && /\d/.test(v) && !/[A-Za-z]{2,}/.test(v)){
+        return 'Habitación';
+      }
+      return 'Nombre';
+    }
+
+    async function shareMsg(){
+      const lines = [];
+
+      const nombreValor = nombre.value.trim();
+      const nombreLabel = getNombreLabel(nombreValor);
+      const telefonoValor = telefono.value.trim();
+      const destinoValor = getDestino();
+      const pasajerosValor = (pasajeros.value || '').trim();
+      const maletasValor = maletas.value.trim();
+      const fechaValor = formatFecha(fecha.value);
+      const comentariosValor = comentarios.value.trim();
+
+      if(nombreLabel) lines.push(`${nombreLabel}: ${nombreValor}`);
+      if(telefonoValor) lines.push(`Teléfono: ${telefonoValor}`);
+      lines.push(`Recogida: ${currentHotel.name}, ${currentHotel.pickup}`);
+      if(destinoValor) lines.push(`Destino: ${destinoValor}`);
+      if(pasajerosValor) lines.push(`Pasajeros: ${pasajerosValor}`);
+      if(maletasValor) lines.push(`Maletas: ${maletasValor}`);
+      if(fechaValor) lines.push(`Fecha: ${fechaValor}`);
+      if(comentariosValor) lines.push(`Comentarios: ${comentariosValor}`);
+
+      const msg = lines.join(String.fromCharCode(10));
+
+      if(navigator.share){
+        try{
+          resetFormAfterShare();
+          await navigator.share({ text: msg });
+        } catch(e){
+          // share cancelled
+        }
+      } else if (navigator.clipboard){
+        await navigator.clipboard.writeText(msg);
+        resetFormAfterShare();
+      } else {
+        alert(msg);
+      }
+    }
+
+    setCurrentDateTime();
+  </script>
+</body>
+</html>
