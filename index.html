@@ -12,10 +12,10 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     :root{
       --bg:#090909; --panel:rgba(20,20,20,0.96); --panel-2:#171717; --soft:rgba(255,255,255,0.06);
-      --line:rgba(255,213,74,0.14); --gold:#ffd000; --gold-2:#f0b900; --text:#ffffff;
+      --line:rgba(255,213,74,0.14); --gold:#00c2ff; --gold-2:#006dff; --text:#ffffff;
       --muted:#decf92; --danger:#ff9a9a; --shadow:0 18px 48px rgba(0,0,0,0.36);
-      --hotel-color:#ffd000;
-      --hotel-color-2:#f0b900;
+      --hotel-color:#00c2ff;
+      --hotel-color-2:#006dff;
     }
     html,body{margin:0;padding:0;width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;}
     body{
@@ -35,7 +35,7 @@
 
     .form-shell{min-height:100dvh;display:flex;flex-direction:column}
     .appbar{position:sticky;top:0;z-index:50;padding:calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;background:rgba(9,9,9,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.04)}
-    .appbar h1{margin:0;text-align:center;color:#ffd000;font-size:34px;line-height:1.2;font-weight:900;letter-spacing:1px}
+    .appbar h1{margin:0;text-align:center;color:#00c2ff;font-size:34px;line-height:1.2;font-weight:900;letter-spacing:1px}
     .content{padding:12px 14px calc(env(safe-area-inset-bottom, 0px) + 16px);display:flex;flex-direction:column;gap:12px}
     .section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.16)}
     .label{display:block;color:var(--muted);font-size:13px;font-weight:800;margin:0 0 6px;letter-spacing:.2px}
@@ -52,6 +52,11 @@
     .passenger-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .pbtn{background:var(--panel-2);border:1px solid rgba(255,255,255,0.04);color:#fff;text-align:center;border-radius:12px;padding:12px 0;font-size:15px;font-weight:700}
     .pbtn.active{background:linear-gradient(135deg,var(--hotel-color),var(--hotel-color-2));color:#000}
+
+
+    .extras-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .extra-option{display:flex;align-items:center;gap:9px;background:var(--panel-2);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:12px;color:#fff;font-size:14px;font-weight:800;cursor:pointer}
+    .extra-option input{width:18px;height:18px;accent-color:#00c2ff;padding:0;margin:0}
 
     .actions{display:flex;flex-direction:column;gap:10px}
     button.primary, button.secondary{width:100%;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:800;cursor:pointer}
@@ -171,6 +176,17 @@
               </div>
             </div>
 
+
+            <div class="section">
+              <label class="label">Extras</label>
+              <div class="extras-grid">
+                <label class="extra-option"><input type="checkbox" id="idaVuelta"> Ida y Vuelta</label>
+                <label class="extra-option"><input type="checkbox" id="pmr"> PMR</label>
+                <label class="extra-option"><input type="checkbox" id="mascota"> Mascota</label>
+                <label class="extra-option"><input type="checkbox" id="sillaBebe"> Silla Bebé</label>
+              </div>
+            </div>
+
             <div class="actions">
               <button id="sendBtn" class="primary" onclick="shareMsg()">Enviar reserva</button>
               <button class="secondary" onclick="logout()">Cerrar sesión</button>
@@ -189,10 +205,10 @@
         password:"sls2025",
         name:"Hotel SLS",
         pickup:"Port Forum, Carrer de la Pau, 2, 08930 Barcelona",
-        color:"#ffd000",
-        color2:"#f0b900",
-        colorName:"AMARILLO",
-        colorEmoji:"🟨"
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       },
       "gravina": {
         password:"gravina12",
@@ -207,46 +223,46 @@
         password:"princess2026",
         name:"Hotel Princess Barcelona",
         pickup:"Av. Diagonal, 1, Barcelona",
-        color:"#ff4fd8",
-        color2:"#a855f7",
-        colorName:"ROSA",
-        colorEmoji:"🟪"
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       },
       "constanza": {
         password:"constanza99",
         name:"Hotel NH Collection Barcelona Constanza",
         pickup:"Carrer de Déu i Mata, 69-99, Les Corts, 08029 Barcelona",
-        color:"#22c55e",
-        color2:"#16a34a",
-        colorName:"VERDE",
-        colorEmoji:"🟩"
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       },
       "bakery": {
         password:"bakery@123",
         name:"Hotel Praktik Bakery",
         pickup:"Carrer de Provença, 279, Eixample, 08037 Barcelona",
-        color:"#fb923c",
-        color2:"#f97316",
-        colorName:"NARANJA",
-        colorEmoji:"🟧"
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       },
       "vinoteca": {
         password:"vinoteca@123",
         name:"Hotel Praktik Vinoteca",
         pickup:"Carrer de Balmes, 51, Eixample, 08007 Barcelona",
-        color:"#ef4444",
-        color2:"#b91c1c",
-        colorName:"ROJO",
-        colorEmoji:"🟥"
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       },
       "praktik": {
         password:"praktik@123",
         name:"Hotel Praktik Rambla",
         pickup:"Rambla de Catalunya, 27, Eixample, 08007 Barcelona",
-        color:"#e5e7eb",
-        color2:"#94a3b8",
-        colorName:"BLANCO",
-        colorEmoji:"⬜"
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       }
     };
 
@@ -353,6 +369,11 @@
       maletas.value = '';
       comentarios.value = '';
 
+      idaVuelta.checked = false;
+      pmr.checked = false;
+      mascota.checked = false;
+      sillaBebe.checked = false;
+
       document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
       const first = document.querySelector('.pbtn');
       if(first) first.classList.add('active');
@@ -416,6 +437,11 @@
       const maletasValor = maletas.value.trim();
       const fechaParts = getFechaParts(fecha.value);
       const comentariosValor = comentarios.value.trim();
+      const extras = [];
+      if(idaVuelta.checked) extras.push("Ida y Vuelta");
+      if(pmr.checked) extras.push("PMR");
+      if(mascota.checked) extras.push("Mascota");
+      if(sillaBebe.checked) extras.push("Silla Bebé");
 
       if(!currentHotel){
         alert("Hotel no identificado. Inicia sesión de nuevo.");
@@ -439,7 +465,8 @@
         maletas: maletasValor,
         fecha: fechaParts.fecha,
         hora: fechaParts.hora,
-        comentarios: comentariosValor
+        comentarios: comentariosValor,
+        extras: extras.join("\n")
       };
 
       const btn = document.getElementById("sendBtn");
