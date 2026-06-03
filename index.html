@@ -106,7 +106,7 @@
         <div class="form-shell">
           <div class="appbar">
             <h1 id="hotelTitle"></h1>
-            
+            <div class="hotel-badge"><span class="hotel-dot"></span><span id="hotelColorName">Hotel seleccionado</span></div>
           </div>
 
           <div class="content">
@@ -194,64 +194,64 @@
         password:"sls2025",
         name:"Hotel SLS",
         pickup:"Port Forum, Carrer de la Pau, 2, 08930 Barcelona",
-        
-        
-        
-        
+        color:"#ffd000",
+        color2:"#f0b900",
+        colorName:"AMARILLO",
+        colorEmoji:"🟨"
       },
       "gravina": {
         password:"gravina12",
         name:"Grupotel Gravina",
         pickup:"Carrer de Gravina, 12, Barcelona",
-        
-        
-        
-        
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
       },
       "princess": {
         password:"princess2026",
         name:"Hotel Princess Barcelona",
         pickup:"Av. Diagonal, 1, Barcelona",
-        
-        
-        
-        
+        color:"#ff4fd8",
+        color2:"#a855f7",
+        colorName:"ROSA",
+        colorEmoji:"🟪"
       },
       "constanza": {
         password:"constanza99",
         name:"Hotel NH Collection Barcelona Constanza",
         pickup:"Carrer de Déu i Mata, 69-99, Les Corts, 08029 Barcelona",
-        
-        
-        
-        
+        color:"#22c55e",
+        color2:"#16a34a",
+        colorName:"VERDE",
+        colorEmoji:"🟩"
       },
       "bakery": {
         password:"bakery@123",
         name:"Hotel Praktik Bakery",
         pickup:"Carrer de Provença, 279, Eixample, 08037 Barcelona",
-        
-        
-        
-        
+        color:"#fb923c",
+        color2:"#f97316",
+        colorName:"NARANJA",
+        colorEmoji:"🟧"
       },
       "vinoteca": {
         password:"vinoteca@123",
         name:"Hotel Praktik Vinoteca",
         pickup:"Carrer de Balmes, 51, Eixample, 08007 Barcelona",
-        
-        
-        
-        
+        color:"#ef4444",
+        color2:"#b91c1c",
+        colorName:"ROJO",
+        colorEmoji:"🟥"
       },
       "praktik": {
         password:"praktik@123",
         name:"Hotel Praktik Rambla",
         pickup:"Rambla de Catalunya, 27, Eixample, 08007 Barcelona",
-        
-        
-        
-        
+        color:"#e5e7eb",
+        color2:"#94a3b8",
+        colorName:"BLANCO",
+        colorEmoji:"⬜"
       }
     };
 
@@ -288,7 +288,7 @@
         localStorage.setItem("hotel", u);
 
         showForm();
-        hotelTitle.innerText = currentHotel.name; hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+        applyHotelTheme();
 
         error.style.display = 'none';
       } else {
@@ -307,7 +307,7 @@
 
       if(currentHotel){
         showForm();
-        hotelTitle.innerText = currentHotel.name; hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+        applyHotelTheme();
       }
     }
 
