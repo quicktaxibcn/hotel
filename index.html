@@ -7,6 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0b0b0b" />
   <title>Reserva Taxi Hotel</title>
+
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     :root{
@@ -51,6 +52,7 @@
     button.primary, button.secondary{width:100%;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:800;cursor:pointer}
     button.primary{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;box-shadow:0 12px 24px rgba(255,213,74,0.18)}
     button.secondary{background:#262626;color:#fff}
+    button:disabled{opacity:.65;cursor:not-allowed}
     .error{color:var(--danger);text-align:center;font-size:13px;margin-top:10px;display:none;font-weight:700}
     .hidden{display:none!important}
     @media (min-width:768px){
@@ -75,10 +77,13 @@
           <div class="login-card">
             <h1 class="login-title">Acceso</h1>
             <p class="login-sub">Acceso privado del hotel</p>
+
             <label class="label">Usuario</label>
             <input id="user" placeholder="Usuario">
+
             <label class="label" style="margin-top:10px;">Contraseña</label>
             <input id="pass" type="password" placeholder="Contraseña">
+
             <button class="primary" onclick="login()" style="margin-top:14px;">Entrar</button>
             <p id="error" class="error">Datos incorrectos</p>
           </div>
@@ -92,6 +97,7 @@
           <div class="appbar">
             <h1 id="hotelTitle"></h1>
           </div>
+
           <div class="content">
             <div class="section">
               <label class="label">Recogida</label>
@@ -118,11 +124,13 @@
                   <div class="quick-grid">
                     <div class="quick-btn" onclick="setQuick('Aeropuerto ✈️',this)">Aeropuerto ✈️</div>
                     <div class="quick-btn" onclick="setQuick('Ciutat 🏙️',this)">Ciutat 🏙️</div>
-                    <div class="quick-btn" onclick="setQuick('Puerto Crusero 🚢',this)">Puerto Crusero 🚢</div>
+                    <div class="quick-btn" onclick="setQuick('Puerto Crucero 🚢',this)">Puerto Crucero 🚢</div>
                     <div class="quick-btn" onclick="setQuick('Sants Estació 🚂',this)">Sants Estació 🚂</div>
                     <div class="quick-btn" onclick="setOtro(this)">Otro</div>
                   </div>
+
                   <input id="destino" readonly placeholder="Destino" style="margin-top:8px;">
+
                   <div id="otroBox" class="hidden" style="margin-top:8px;">
                     <input id="otroDestino" placeholder="Dirección manual">
                   </div>
@@ -133,6 +141,7 @@
                 <div class="section">
                   <label class="label">Pasajeros</label>
                   <div class="passenger-grid" id="passGrid"></div>
+
                   <div class="row2" style="margin-top:8px;">
                     <div>
                       <label class="label">Pasajeros</label>
@@ -148,6 +157,7 @@
                 <div class="section">
                   <label class="label">Fecha y hora</label>
                   <input type="datetime-local" id="fecha">
+
                   <label class="label" style="margin-top:8px;">Comentarios</label>
                   <textarea id="comentarios" placeholder="Opcional"></textarea>
                 </div>
@@ -155,7 +165,7 @@
             </div>
 
             <div class="actions">
-              <button class="primary" onclick="shareMsg()">Compartir</button>
+              <button id="sendBtn" class="primary" onclick="shareMsg()">Enviar reserva</button>
               <button class="secondary" onclick="logout()">Cerrar sesión</button>
             </div>
           </div>
@@ -165,6 +175,8 @@
   </div>
 
   <script>
+    const WORKER_URL = "https://quicktaxi-reserva-hotel.zaighamch-bcn.workers.dev";
+
     const hotels = {
       "sls": {password:"sls2025",name:"Hotel SLS",pickup:"Port Forum, Carrer de la Pau, 2, 08930 Barcelona"},
       "gravina": {password:"gravina12",name:"Grupotel Gravina",pickup:"Carrer de Gravina, 12, Barcelona"},
@@ -190,10 +202,13 @@
     function login(){
       const u = user.value.toLowerCase().trim();
       const p = pass.value;
+
       if(hotels[u] && hotels[u].password === p){
         currentHotel = hotels[u];
         localStorage.setItem("hotel", u);
+
         showForm();
+
         hotelTitle.innerText = currentHotel.name;
         hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
         error.style.display = 'none';
@@ -210,6 +225,7 @@
     if(localStorage.getItem("hotel")){
       const u = localStorage.getItem("hotel");
       currentHotel = hotels[u];
+
       if(currentHotel){
         showForm();
         hotelTitle.innerText = currentHotel.name;
@@ -243,6 +259,7 @@
     function setCurrentDateTime(){
       const n = new Date();
       const pad = n => String(n).padStart(2, '0');
+
       fecha.value = `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}T${pad(n.getHours())}:${pad(n.getMinutes())}`;
     }
 
@@ -252,13 +269,17 @@
       destino.value = '';
       otroDestino.value = '';
       otroBox.classList.add('hidden');
+
       document.querySelectorAll('.quick-btn').forEach(x => x.classList.remove('active'));
+
       pasajeros.value = '1';
       maletas.value = '';
       comentarios.value = '';
+
       document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
       const first = document.querySelector('.pbtn');
       if(first) first.classList.add('active');
+
       setCurrentDateTime();
     }
 
@@ -266,35 +287,42 @@
       const b = document.createElement('div');
       b.innerText = i;
       b.className = 'pbtn';
+
       if(i===1) b.classList.add('active');
+
       b.onclick = function(){
         document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         pasajeros.value = i;
       };
+
       passGrid.appendChild(b);
     }
 
     function formatFecha(value){
       if(!value) return '';
+
       const parts = value.split('T');
       if(parts.length !== 2) return value;
+
       const d = parts[0].split('-');
+
       return `${d[2]}/${d[1]}/${d[0]} ${parts[1]}`;
     }
 
     function getNombreLabel(value){
       const v = (value || '').trim();
+
       if(!v) return null;
+
       if(/^[0-9A-Za-z\-\/]+$/.test(v) && /\d/.test(v) && !/[A-Za-z]{2,}/.test(v)){
         return 'Habitación';
       }
+
       return 'Nombre';
     }
 
     async function shareMsg(){
-      const lines = [];
-
       const nombreValor = nombre.value.trim();
       const nombreLabel = getNombreLabel(nombreValor);
       const telefonoValor = telefono.value.trim();
@@ -304,29 +332,58 @@
       const fechaValor = formatFecha(fecha.value);
       const comentariosValor = comentarios.value.trim();
 
-      if(nombreLabel) lines.push(`${nombreLabel}: ${nombreValor}`);
-      if(telefonoValor) lines.push(`Teléfono: ${telefonoValor}`);
-      lines.push(`Recogida: ${currentHotel.name}, ${currentHotel.pickup}`);
-      if(destinoValor) lines.push(`Destino: ${destinoValor}`);
-      if(pasajerosValor) lines.push(`Pasajeros: ${pasajerosValor}`);
-      if(maletasValor) lines.push(`Maletas: ${maletasValor}`);
-      if(fechaValor) lines.push(`Fecha: ${fechaValor}`);
-      if(comentariosValor) lines.push(`Comentarios: ${comentariosValor}`);
+      if(!currentHotel){
+        alert("Hotel no identificado. Inicia sesión de nuevo.");
+        return;
+      }
 
-      const msg = lines.join(String.fromCharCode(10));
+      if(!destinoValor){
+        alert("Selecciona un destino.");
+        return;
+      }
 
-      if(navigator.share){
-        try{
-          resetFormAfterShare();
-          await navigator.share({ text: msg });
-        } catch(e){
-          // share cancelled
+      const payload = {
+        hotel: currentHotel.name,
+        tipo: "Reserva Hotel",
+        cliente: nombreLabel === "Nombre" ? nombreValor : "",
+        habitacion: nombreLabel === "Habitación" ? nombreValor : "",
+        telefono: telefonoValor,
+        recogida: currentHotel.name + ", " + currentHotel.pickup,
+        destino: destinoValor,
+        pasajeros: pasajerosValor,
+        maletas: maletasValor,
+        fecha: fechaValor,
+        hora: "",
+        comentarios: comentariosValor
+      };
+
+      const btn = document.getElementById("sendBtn");
+      const oldText = btn.innerText;
+
+      btn.disabled = true;
+      btn.innerText = "Enviando...";
+
+      try {
+        const response = await fetch(WORKER_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        if(!response.ok){
+          throw new Error("Error Telegram");
         }
-      } else if (navigator.clipboard){
-        await navigator.clipboard.writeText(msg);
+
+        alert("Reserva enviada correctamente ✅");
         resetFormAfterShare();
-      } else {
-        alert(msg);
+
+      } catch (e) {
+        alert("Error enviando la reserva. Inténtalo de nuevo.");
+      } finally {
+        btn.disabled = false;
+        btn.innerText = oldText;
       }
     }
 
