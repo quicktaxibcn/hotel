@@ -7,7 +7,6 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0b0b0b" />
   <title>Reserva Taxi Hotel</title>
-
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     :root{
@@ -77,13 +76,10 @@
           <div class="login-card">
             <h1 class="login-title">Acceso</h1>
             <p class="login-sub">Acceso privado del hotel</p>
-
             <label class="label">Usuario</label>
             <input id="user" placeholder="Usuario">
-
             <label class="label" style="margin-top:10px;">Contraseña</label>
             <input id="pass" type="password" placeholder="Contraseña">
-
             <button class="primary" onclick="login()" style="margin-top:14px;">Entrar</button>
             <p id="error" class="error">Datos incorrectos</p>
           </div>
@@ -97,7 +93,6 @@
           <div class="appbar">
             <h1 id="hotelTitle"></h1>
           </div>
-
           <div class="content">
             <div class="section">
               <label class="label">Recogida</label>
@@ -122,15 +117,13 @@
                 <div class="section">
                   <label class="label">Destino</label>
                   <div class="quick-grid">
-                    <div class="quick-btn" onclick="setQuick('Aeropuerto ✈️',this)">Aeropuerto ✈️</div>
-                    <div class="quick-btn" onclick="setQuick('Ciutat 🏙️',this)">Ciutat 🏙️</div>
-                    <div class="quick-btn" onclick="setQuick('Puerto Crucero 🚢',this)">Puerto Crucero 🚢</div>
-                    <div class="quick-btn" onclick="setQuick('Sants Estació 🚂',this)">Sants Estació 🚂</div>
+                    <div class="quick-btn" onclick="setQuick('Aeropuerto',this)">Aeropuerto</div>
+                    <div class="quick-btn" onclick="setQuick('Ciutat',this)">Ciutat</div>
+                    <div class="quick-btn" onclick="setQuick('Puerto Crucero',this)">Puerto Crucero</div>
+                    <div class="quick-btn" onclick="setQuick('Sants Estació',this)">Sants Estació</div>
                     <div class="quick-btn" onclick="setOtro(this)">Otro</div>
                   </div>
-
                   <input id="destino" readonly placeholder="Destino" style="margin-top:8px;">
-
                   <div id="otroBox" class="hidden" style="margin-top:8px;">
                     <input id="otroDestino" placeholder="Dirección manual">
                   </div>
@@ -141,7 +134,6 @@
                 <div class="section">
                   <label class="label">Pasajeros</label>
                   <div class="passenger-grid" id="passGrid"></div>
-
                   <div class="row2" style="margin-top:8px;">
                     <div>
                       <label class="label">Pasajeros</label>
@@ -157,7 +149,6 @@
                 <div class="section">
                   <label class="label">Fecha y hora</label>
                   <input type="datetime-local" id="fecha">
-
                   <label class="label" style="margin-top:8px;">Comentarios</label>
                   <textarea id="comentarios" placeholder="Opcional"></textarea>
                 </div>
@@ -188,6 +179,7 @@
     };
 
     let currentHotel = null;
+    let defaultDateTimeValue = "";
 
     function showLogin(){
       document.getElementById('loginBox').classList.remove('hidden');
@@ -206,9 +198,7 @@
       if(hotels[u] && hotels[u].password === p){
         currentHotel = hotels[u];
         localStorage.setItem("hotel", u);
-
         showForm();
-
         hotelTitle.innerText = currentHotel.name;
         hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
         error.style.display = 'none';
@@ -225,7 +215,6 @@
     if(localStorage.getItem("hotel")){
       const u = localStorage.getItem("hotel");
       currentHotel = hotels[u];
-
       if(currentHotel){
         showForm();
         hotelTitle.innerText = currentHotel.name;
@@ -256,11 +245,15 @@
       return destino.value.trim();
     }
 
-    function setCurrentDateTime(){
-      const n = new Date();
+    function localDateTimeForInput(date){
       const pad = n => String(n).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
 
-      fecha.value = `${n.getFullYear()}-${pad(n.getMonth()+1)}-${pad(n.getDate())}T${pad(n.getHours())}:${pad(n.getMinutes())}`;
+    function setCurrentDateTime(){
+      const now = new Date();
+      fecha.value = localDateTimeForInput(now);
+      defaultDateTimeValue = fecha.value;
     }
 
     function resetFormAfterShare(){
@@ -269,17 +262,13 @@
       destino.value = '';
       otroDestino.value = '';
       otroBox.classList.add('hidden');
-
       document.querySelectorAll('.quick-btn').forEach(x => x.classList.remove('active'));
-
       pasajeros.value = '1';
       maletas.value = '';
       comentarios.value = '';
-
       document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
       const first = document.querySelector('.pbtn');
       if(first) first.classList.add('active');
-
       setCurrentDateTime();
     }
 
@@ -287,39 +276,35 @@
       const b = document.createElement('div');
       b.innerText = i;
       b.className = 'pbtn';
-
       if(i===1) b.classList.add('active');
-
       b.onclick = function(){
         document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         pasajeros.value = i;
       };
-
       passGrid.appendChild(b);
     }
 
-    function formatFecha(value){
-      if(!value) return '';
-
+    function getFechaParts(value){
+      if(!value) return { fecha: "", hora: "" };
       const parts = value.split('T');
-      if(parts.length !== 2) return value;
-
+      if(parts.length !== 2) return { fecha: value, hora: "" };
       const d = parts[0].split('-');
-
-      return `${d[2]}/${d[1]}/${d[0]} ${parts[1]}`;
+      if(d.length !== 3) return { fecha: parts[0], hora: parts[1] };
+      return { fecha: `${d[2]}/${d[1]}/${d[0]}`, hora: parts[1] };
     }
 
     function getNombreLabel(value){
       const v = (value || '').trim();
-
       if(!v) return null;
-
       if(/^[0-9A-Za-z\-\/]+$/.test(v) && /\d/.test(v) && !/[A-Za-z]{2,}/.test(v)){
         return 'Habitación';
       }
-
       return 'Nombre';
+    }
+
+    function getTipoServicio(){
+      return fecha.value === defaultDateTimeValue ? "Ahora" : "Reserva";
     }
 
     async function shareMsg(){
@@ -329,7 +314,7 @@
       const destinoValor = getDestino();
       const pasajerosValor = (pasajeros.value || '').trim();
       const maletasValor = maletas.value.trim();
-      const fechaValor = formatFecha(fecha.value);
+      const fechaParts = getFechaParts(fecha.value);
       const comentariosValor = comentarios.value.trim();
 
       if(!currentHotel){
@@ -344,7 +329,7 @@
 
       const payload = {
         hotel: currentHotel.name,
-        tipo: "Reserva Hotel",
+        tipo: getTipoServicio(),
         cliente: nombreLabel === "Nombre" ? nombreValor : "",
         habitacion: nombreLabel === "Habitación" ? nombreValor : "",
         telefono: telefonoValor,
@@ -352,23 +337,20 @@
         destino: destinoValor,
         pasajeros: pasajerosValor,
         maletas: maletasValor,
-        fecha: fechaValor,
-        hora: "",
+        fecha: fechaParts.fecha,
+        hora: fechaParts.hora,
         comentarios: comentariosValor
       };
 
       const btn = document.getElementById("sendBtn");
       const oldText = btn.innerText;
-
       btn.disabled = true;
       btn.innerText = "Enviando...";
 
       try {
         const response = await fetch(WORKER_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload)
         });
 
@@ -376,7 +358,7 @@
           throw new Error("Error Telegram");
         }
 
-        alert("Reserva enviada correctamente ✅");
+        alert("Reserva enviada correctamente");
         resetFormAfterShare();
 
       } catch (e) {
