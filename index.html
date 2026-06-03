@@ -7,12 +7,15 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0b0b0b" />
   <title>Reserva Taxi Hotel</title>
+
   <style>
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     :root{
       --bg:#090909; --panel:rgba(20,20,20,0.96); --panel-2:#171717; --soft:rgba(255,255,255,0.06);
       --line:rgba(255,213,74,0.14); --gold:#ffd000; --gold-2:#f0b900; --text:#ffffff;
       --muted:#decf92; --danger:#ff9a9a; --shadow:0 18px 48px rgba(0,0,0,0.36);
+      --hotel-color:#ffd000;
+      --hotel-color-2:#f0b900;
     }
     html,body{margin:0;padding:0;width:100%;min-height:100%;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;}
     body{
@@ -29,31 +32,39 @@
     .login-card::before{content:"";display:block;width:86px;height:5px;border-radius:99px;margin:0 auto 14px;background:linear-gradient(90deg,var(--gold),#fff1a6,var(--gold));opacity:.95}
     .login-title{margin:0 0 6px;text-align:center;color:var(--gold);font-size:24px;font-weight:800}
     .login-sub{margin:0 0 16px;text-align:center;color:var(--muted);font-size:13px}
+
     .form-shell{min-height:100dvh;display:flex;flex-direction:column}
     .appbar{position:sticky;top:0;z-index:50;padding:calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;background:rgba(9,9,9,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.04)}
-    .appbar h1{margin:0;text-align:center;color:var(--gold);font-size:20px;line-height:1.2;font-weight:800}
+    .appbar::before{content:"";display:block;height:5px;border-radius:99px;background:linear-gradient(90deg,var(--hotel-color),var(--hotel-color-2));margin:0 auto 10px;max-width:170px}
+    .appbar h1{margin:0;text-align:center;color:var(--hotel-color);font-size:20px;line-height:1.2;font-weight:800}
+    .hotel-badge{margin:8px auto 0;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:12px;font-weight:800}
+    .hotel-dot{width:12px;height:12px;border-radius:50%;background:var(--hotel-color);box-shadow:0 0 15px var(--hotel-color)}
+
     .content{padding:12px 14px calc(env(safe-area-inset-bottom, 0px) + 16px);display:flex;flex-direction:column;gap:12px}
     .section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.16)}
     .label{display:block;color:var(--muted);font-size:13px;font-weight:800;margin:0 0 6px;letter-spacing:.2px}
     input, textarea{width:100%;border:none;outline:none;border-radius:14px;background:var(--soft);color:#fff;font-size:16px;padding:13px}
     input[readonly]{color:#f7e8a0}
-    input:focus, textarea:focus{box-shadow:0 0 0 2px rgba(255,213,74,0.18)}
+    input:focus, textarea:focus{box-shadow:0 0 0 2px color-mix(in srgb, var(--hotel-color) 28%, transparent)}
     textarea{min-height:92px;resize:none}
+
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
     .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .quick-btn,.pbtn{user-select:none;cursor:pointer}
     .quick-btn{background:var(--panel-2);border:1px solid rgba(255,255,255,0.04);color:#fff;text-align:center;border-radius:14px;padding:13px 8px;font-size:14px;font-weight:700;line-height:1.15;min-height:50px;display:flex;align-items:center;justify-content:center}
-    .quick-btn.active{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000}
+    .quick-btn.active{background:linear-gradient(135deg,var(--hotel-color),var(--hotel-color-2));color:#000}
     .passenger-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .pbtn{background:var(--panel-2);border:1px solid rgba(255,255,255,0.04);color:#fff;text-align:center;border-radius:12px;padding:12px 0;font-size:15px;font-weight:700}
-    .pbtn.active{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000}
+    .pbtn.active{background:linear-gradient(135deg,var(--hotel-color),var(--hotel-color-2));color:#000}
+
     .actions{display:flex;flex-direction:column;gap:10px}
     button.primary, button.secondary{width:100%;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:800;cursor:pointer}
-    button.primary{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;box-shadow:0 12px 24px rgba(255,213,74,0.18)}
+    button.primary{background:linear-gradient(135deg,var(--hotel-color),var(--hotel-color-2));color:#000;box-shadow:0 12px 24px color-mix(in srgb, var(--hotel-color) 22%, transparent)}
     button.secondary{background:#262626;color:#fff}
     button:disabled{opacity:.65;cursor:not-allowed}
     .error{color:var(--danger);text-align:center;font-size:13px;margin-top:10px;display:none;font-weight:700}
     .hidden{display:none!important}
+
     @media (min-width:768px){
       body{padding:20px}
       .screen{min-height:calc(100vh - 40px);align-items:center}
@@ -76,10 +87,13 @@
           <div class="login-card">
             <h1 class="login-title">Acceso</h1>
             <p class="login-sub">Acceso privado del hotel</p>
+
             <label class="label">Usuario</label>
             <input id="user" placeholder="Usuario">
+
             <label class="label" style="margin-top:10px;">Contraseña</label>
             <input id="pass" type="password" placeholder="Contraseña">
+
             <button class="primary" onclick="login()" style="margin-top:14px;">Entrar</button>
             <p id="error" class="error">Datos incorrectos</p>
           </div>
@@ -92,7 +106,9 @@
         <div class="form-shell">
           <div class="appbar">
             <h1 id="hotelTitle"></h1>
+            <div class="hotel-badge"><span class="hotel-dot"></span><span id="hotelColorName">Hotel seleccionado</span></div>
           </div>
+
           <div class="content">
             <div class="section">
               <label class="label">Recogida</label>
@@ -117,13 +133,16 @@
                 <div class="section">
                   <label class="label">Destino</label>
                   <div class="quick-grid">
-                    <div class="quick-btn" onclick="setQuick('Aeropuerto',this)">Aeropuerto</div>
-                    <div class="quick-btn" onclick="setQuick('Ciutat',this)">Ciutat</div>
-                    <div class="quick-btn" onclick="setQuick('Puerto Crucero',this)">Puerto Crucero</div>
-                    <div class="quick-btn" onclick="setQuick('Sants Estació',this)">Sants Estació</div>
+                    <!-- Text shows icons on page, but Telegram receives clean text without icons -->
+                    <div class="quick-btn" onclick="setQuick('Aeropuerto',this)">Aeropuerto ✈️</div>
+                    <div class="quick-btn" onclick="setQuick('Ciutat',this)">Ciutat 🌆</div>
+                    <div class="quick-btn" onclick="setQuick('Puerto Crucero',this)">Puerto Crucero 🚢</div>
+                    <div class="quick-btn" onclick="setQuick('Sants Estació',this)">Sants Estació 🚂</div>
                     <div class="quick-btn" onclick="setOtro(this)">Otro</div>
                   </div>
+
                   <input id="destino" readonly placeholder="Destino" style="margin-top:8px;">
+
                   <div id="otroBox" class="hidden" style="margin-top:8px;">
                     <input id="otroDestino" placeholder="Dirección manual">
                   </div>
@@ -134,6 +153,7 @@
                 <div class="section">
                   <label class="label">Pasajeros</label>
                   <div class="passenger-grid" id="passGrid"></div>
+
                   <div class="row2" style="margin-top:8px;">
                     <div>
                       <label class="label">Pasajeros</label>
@@ -149,6 +169,7 @@
                 <div class="section">
                   <label class="label">Fecha y hora</label>
                   <input type="datetime-local" id="fecha">
+
                   <label class="label" style="margin-top:8px;">Comentarios</label>
                   <textarea id="comentarios" placeholder="Opcional"></textarea>
                 </div>
@@ -169,17 +190,84 @@
     const WORKER_URL = "https://quicktaxi-reserva-hotel.zaighamch-bcn.workers.dev";
 
     const hotels = {
-      "sls": {password:"sls2025",name:"Hotel SLS",pickup:"Port Forum, Carrer de la Pau, 2, 08930 Barcelona"},
-      "gravina": {password:"gravina12",name:"Grupotel Gravina",pickup:"Carrer de Gravina, 12, Barcelona"},
-      "princess": {password:"princess2026",name:"Hotel Princess Barcelona",pickup:"Av. Diagonal, 1, Barcelona"},
-      "constanza": {password:"constanza99",name:"Hotel NH Collection Barcelona Constanza",pickup:"Carrer de Déu i Mata, 69-99, Les Corts, 08029 Barcelona"},
-      "bakery": {password:"bakery@123",name:"Hotel Praktik Bakery",pickup:"Carrer de Provença, 279, Eixample, 08037 Barcelona"},
-      "vinoteca": {password:"vinoteca@123",name:"Hotel Praktik Vinoteca",pickup:"Carrer de Balmes, 51, Eixample, 08007 Barcelona"},
-      "praktik": {password:"praktik@123",name:"Hotel Praktik Rambla",pickup:"Rambla de Catalunya, 27, Eixample, 08007 Barcelona"}
+      "sls": {
+        password:"sls2025",
+        name:"Hotel SLS",
+        pickup:"Port Forum, Carrer de la Pau, 2, 08930 Barcelona",
+        color:"#ffd000",
+        color2:"#f0b900",
+        colorName:"AMARILLO",
+        colorEmoji:"🟨"
+      },
+      "gravina": {
+        password:"gravina12",
+        name:"Grupotel Gravina",
+        pickup:"Carrer de Gravina, 12, Barcelona",
+        color:"#00c2ff",
+        color2:"#006dff",
+        colorName:"AZUL",
+        colorEmoji:"🟦"
+      },
+      "princess": {
+        password:"princess2026",
+        name:"Hotel Princess Barcelona",
+        pickup:"Av. Diagonal, 1, Barcelona",
+        color:"#ff4fd8",
+        color2:"#a855f7",
+        colorName:"ROSA",
+        colorEmoji:"🟪"
+      },
+      "constanza": {
+        password:"constanza99",
+        name:"Hotel NH Collection Barcelona Constanza",
+        pickup:"Carrer de Déu i Mata, 69-99, Les Corts, 08029 Barcelona",
+        color:"#22c55e",
+        color2:"#16a34a",
+        colorName:"VERDE",
+        colorEmoji:"🟩"
+      },
+      "bakery": {
+        password:"bakery@123",
+        name:"Hotel Praktik Bakery",
+        pickup:"Carrer de Provença, 279, Eixample, 08037 Barcelona",
+        color:"#fb923c",
+        color2:"#f97316",
+        colorName:"NARANJA",
+        colorEmoji:"🟧"
+      },
+      "vinoteca": {
+        password:"vinoteca@123",
+        name:"Hotel Praktik Vinoteca",
+        pickup:"Carrer de Balmes, 51, Eixample, 08007 Barcelona",
+        color:"#ef4444",
+        color2:"#b91c1c",
+        colorName:"ROJO",
+        colorEmoji:"🟥"
+      },
+      "praktik": {
+        password:"praktik@123",
+        name:"Hotel Praktik Rambla",
+        pickup:"Rambla de Catalunya, 27, Eixample, 08007 Barcelona",
+        color:"#e5e7eb",
+        color2:"#94a3b8",
+        colorName:"BLANCO",
+        colorEmoji:"⬜"
+      }
     };
 
     let currentHotel = null;
     let defaultDateTimeValue = "";
+
+    function applyHotelTheme(){
+      if(!currentHotel) return;
+
+      document.documentElement.style.setProperty('--hotel-color', currentHotel.color || '#ffd000');
+      document.documentElement.style.setProperty('--hotel-color-2', currentHotel.color2 || '#f0b900');
+
+      hotelTitle.innerText = currentHotel.name;
+      hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+      hotelColorName.innerText = (currentHotel.colorName || "COLOR") + " - " + currentHotel.name;
+    }
 
     function showLogin(){
       document.getElementById('loginBox').classList.remove('hidden');
@@ -198,9 +286,10 @@
       if(hotels[u] && hotels[u].password === p){
         currentHotel = hotels[u];
         localStorage.setItem("hotel", u);
+
         showForm();
-        hotelTitle.innerText = currentHotel.name;
-        hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+        applyHotelTheme();
+
         error.style.display = 'none';
       } else {
         error.style.display = 'block';
@@ -215,10 +304,10 @@
     if(localStorage.getItem("hotel")){
       const u = localStorage.getItem("hotel");
       currentHotel = hotels[u];
+
       if(currentHotel){
         showForm();
-        hotelTitle.innerText = currentHotel.name;
-        hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
+        applyHotelTheme();
       }
     }
 
@@ -262,13 +351,17 @@
       destino.value = '';
       otroDestino.value = '';
       otroBox.classList.add('hidden');
+
       document.querySelectorAll('.quick-btn').forEach(x => x.classList.remove('active'));
+
       pasajeros.value = '1';
       maletas.value = '';
       comentarios.value = '';
+
       document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
       const first = document.querySelector('.pbtn');
       if(first) first.classList.add('active');
+
       setCurrentDateTime();
     }
 
@@ -276,30 +369,42 @@
       const b = document.createElement('div');
       b.innerText = i;
       b.className = 'pbtn';
+
       if(i===1) b.classList.add('active');
+
       b.onclick = function(){
         document.querySelectorAll('.pbtn').forEach(x => x.classList.remove('active'));
         b.classList.add('active');
         pasajeros.value = i;
       };
+
       passGrid.appendChild(b);
     }
 
     function getFechaParts(value){
       if(!value) return { fecha: "", hora: "" };
+
       const parts = value.split('T');
       if(parts.length !== 2) return { fecha: value, hora: "" };
+
       const d = parts[0].split('-');
       if(d.length !== 3) return { fecha: parts[0], hora: parts[1] };
-      return { fecha: `${d[2]}/${d[1]}/${d[0]}`, hora: parts[1] };
+
+      return {
+        fecha: `${d[2]}/${d[1]}/${d[0]}`,
+        hora: parts[1]
+      };
     }
 
     function getNombreLabel(value){
       const v = (value || '').trim();
+
       if(!v) return null;
+
       if(/^[0-9A-Za-z\-\/]+$/.test(v) && /\d/.test(v) && !/[A-Za-z]{2,}/.test(v)){
         return 'Habitación';
       }
+
       return 'Nombre';
     }
 
@@ -328,7 +433,7 @@
       }
 
       const payload = {
-        hotel: currentHotel.name,
+        hotel: (currentHotel.colorEmoji || "") + " " + currentHotel.name,
         tipo: getTipoServicio(),
         cliente: nombreLabel === "Nombre" ? nombreValor : "",
         habitacion: nombreLabel === "Habitación" ? nombreValor : "",
@@ -344,13 +449,16 @@
 
       const btn = document.getElementById("sendBtn");
       const oldText = btn.innerText;
+
       btn.disabled = true;
       btn.innerText = "Enviando...";
 
       try {
         const response = await fetch(WORKER_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify(payload)
         });
 
