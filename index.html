@@ -35,11 +35,7 @@
 
     .form-shell{min-height:100dvh;display:flex;flex-direction:column}
     .appbar{position:sticky;top:0;z-index:50;padding:calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;background:rgba(9,9,9,0.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.04)}
-    .appbar::before{content:"";display:block;height:5px;border-radius:99px;background:linear-gradient(90deg,var(--hotel-color),var(--hotel-color-2));margin:0 auto 10px;max-width:170px}
-    .appbar h1{margin:0;text-align:center;color:var(--hotel-color);font-size:20px;line-height:1.2;font-weight:800}
-    .hotel-badge{margin:8px auto 0;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;font-size:12px;font-weight:800}
-    .hotel-dot{width:12px;height:12px;border-radius:50%;background:var(--hotel-color);box-shadow:0 0 15px var(--hotel-color)}
-
+    .appbar h1{margin:0;text-align:center;color:#ffd000;font-size:34px;line-height:1.2;font-weight:900;letter-spacing:1px}
     .content{padding:12px 14px calc(env(safe-area-inset-bottom, 0px) + 16px);display:flex;flex-direction:column;gap:12px}
     .section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px;box-shadow:0 8px 24px rgba(0,0,0,0.16)}
     .label{display:block;color:var(--muted);font-size:13px;font-weight:800;margin:0 0 6px;letter-spacing:.2px}
@@ -106,8 +102,7 @@
         <div class="form-shell">
           <div class="appbar">
             <h1 id="hotelTitle"></h1>
-            <div class="hotel-badge"><span class="hotel-dot"></span><span id="hotelColorName">Hotel seleccionado</span></div>
-          </div>
+            </div>
 
           <div class="content">
             <div class="section">
@@ -266,7 +261,7 @@
 
       hotelTitle.innerText = currentHotel.name;
       hotelFull.value = currentHotel.name + ", " + currentHotel.pickup;
-      hotelColorName.innerText = (currentHotel.colorName || "COLOR") + " - " + currentHotel.name;
+
     }
 
     function showLogin(){
